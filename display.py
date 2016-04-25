@@ -5,11 +5,20 @@ import io
 import os
 import time
 
-ser = serial.Serial('/dev/ttyUSB0', 2400)
-sio = io.TextIOWrapper(io.BufferedRWPair(ser, ser))
+class display(object):
+    """docstring for display"""
+    def __init__(self, port, baud):
+        super(display, self).__init__()
+        self.ser = serial.Serial(port, baud)
+        self.sio = io.TextIOWrapper(io.BufferedRWPair(self.ser, self.ser))
+        self.printd('\x1F')
+    def printd(self, str):
+        self.sio.write(str)
+        self.sio.flush()
+    def cursor(self, b):
+        if(b): self.printd('\x13')
+        else: self.prind('\x14')
 
-mpc_cmd = "mpc -h 192.168.0.2 -P password current"
-chars = 39
 
 class scrolltext(object):
     """docstring for scrolltext"""
@@ -18,7 +27,7 @@ class scrolltext(object):
         self.len = length
         self.pos = 0
         self.text = rpad(text, length)
-    def update(self):
+    def shift(self):
         self.pos += 1
         if(self.pos > len(self.text) - self.len): self.pos = 0
     def getstring(self):
@@ -39,17 +48,17 @@ def pos(p):
 def getstuff(cmd):
     return os.popen(cmd).readlines()[0].strip("\n")
 
-#sio.write("\x1F\x14")
-#sio.flush()
 
+d1 = display('/dev/ttyUSB0', 2400)
+
+mpc_cmd = "mpc -h 192.168.0.2 -P password current"
 #song = scrolltext("ganz langer text der devinitiv laenger als 40 zeichen ist", 39)
 song = scrolltext("", 39)
 
 while 1:
     date = rpad(getstuff("date"), 40)
     song.change(getstuff(mpc_cmd))
-    sio.write(pos(0) + date)
-    sio.write(pos(40) + song.getstring())
-    sio.flush()
-    song.update()
+    d1.printd(pos(0) + date)
+    d1.printd(pos(40) + song.getstring())
+    song.shift()
     time.sleep(1)
