@@ -17,7 +17,7 @@ class display(object):
         self.sio.flush()
     def cursor(self, b):
         if(b): self.printd('\x13')
-        else: self.prind('\x14')
+        else: self.printd('\x14')
 
 
 class scrolltext(object):
@@ -50,6 +50,7 @@ def getstuff(cmd):
 
 
 d1 = display('/dev/ttyUSB0', 2400)
+d1.cursor(0)
 
 mpc_cmd = "mpc -h 192.168.0.2 -P password current"
 #song = scrolltext("ganz langer text der devinitiv laenger als 40 zeichen ist", 39)
