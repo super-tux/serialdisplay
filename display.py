@@ -19,6 +19,11 @@ class display(object):
         if(b): self.printd('\x13')
         else: self.printd('\x14')
 
+class field(object):
+    """docstring for field"""
+    def __init__(self, arg):
+        super(field, self).__init__()
+        self.arg = arg
 
 class scrolltext(object):
     """docstring for scrolltext"""
@@ -32,10 +37,22 @@ class scrolltext(object):
         if(self.pos > len(self.text) - self.len): self.pos = 0
     def getstring(self):
         return self.text[self.pos:self.pos+self.len]
-    def change(self, newtext):
+    def update(self, newtext):
         if(newtext != self.text):
             self.pos = 0
             self.text = rpad(newtext, self.len)
+
+class pbar(object):
+    """docstring for pbar"""
+    def __init__(self, length, value):
+        super(pbar, self).__init__()
+        self.len = length
+        self.val = value
+    def getstring(self):
+        p = int(self.val * self.len)
+        return p * "#" + (self.len - p) * "-"
+    def update(self, value):
+        self.val = value
 
 def rpad(s, l):
     if(len(s) < l):
@@ -58,7 +75,7 @@ song = scrolltext("", 39)
 
 while 1:
     date = rpad(getstuff("date"), 40)
-    song.change(getstuff(mpc_cmd))
+    song.update(getstuff(mpc_cmd))
     d1.printd(pos(0) + date)
     d1.printd(pos(40) + song.getstring())
     song.shift()
