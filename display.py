@@ -31,7 +31,7 @@ class field(object):
 class scrolltext(field):
     """docstring for scrolltext"""
     def __init__(self, position, length, text):
-        super(scrolltext, self, position, length).__init__()
+        super(scrolltext, self).__init__(position, length)
         self.spos = 0
         self.text = rpad(text, length)
     def shift(self):
