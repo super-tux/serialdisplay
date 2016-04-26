@@ -21,25 +21,27 @@ class display(object):
 
 class field(object):
     """docstring for field"""
-    def __init__(self, arg):
+    def __init__(self, position, length):
         super(field, self).__init__()
-        self.arg = arg
-
-class scrolltext(object):
-    """docstring for scrolltext"""
-    def __init__(self, text, length):
-        super(scrolltext, self).__init__()
+        self.pos = position
         self.len = length
-        self.pos = 0
+    def getstring(self):
+        return "\x10" + chr(self.pos) + self.prepstring()
+
+class scrolltext(field):
+    """docstring for scrolltext"""
+    def __init__(self, position, length, text):
+        super(scrolltext, self, position, length).__init__()
+        self.spos = 0
         self.text = rpad(text, length)
     def shift(self):
-        self.pos += 1
-        if(self.pos > len(self.text) - self.len): self.pos = 0
-    def getstring(self):
-        return self.text[self.pos:self.pos+self.len]
+        self.spos += 1
+        if(self.spos > len(self.text) - self.len): self.spos = 0
+    def prepstring(self):
+        return self.text[self.spos:self.spos+self.len]
     def update(self, newtext):
         if(newtext != self.text):
-            self.pos = 0
+            self.spos = 0
             self.text = rpad(newtext, self.len)
 
 class pbar(object):
@@ -71,12 +73,12 @@ d1.cursor(0)
 
 mpc_cmd = "mpc -h 192.168.0.2 -P password current"
 #song = scrolltext("ganz langer text der devinitiv laenger als 40 zeichen ist", 39)
-song = scrolltext("", 39)
+song = scrolltext(40, 39, "")
 
 while 1:
     date = rpad(getstuff("date"), 40)
     song.update(getstuff(mpc_cmd))
     d1.printd(pos(0) + date)
-    d1.printd(pos(40) + song.getstring())
+    d1.printd(song.getstring())
     song.shift()
     time.sleep(1)
