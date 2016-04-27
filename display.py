@@ -4,6 +4,7 @@ import serial
 import io
 import os
 import time
+import re
 
 class display(object):
     """docstring for display"""
@@ -44,14 +45,13 @@ class scrolltext(field):
             self.spos = 0
             self.text = rpad(newtext, self.len)
 
-class pbar(object):
+class pbar(field):
     """docstring for pbar"""
-    def __init__(self, length, value):
-        super(pbar, self).__init__()
-        self.len = length
+    def __init__(self, position, length, value):
+        super(pbar, self).__init__(position, length)
         self.val = value
-    def getstring(self):
-        p = int(self.val * self.len)
+    def prepstring(self):
+        p = int(self.val * self.len / 100)
         return p * "#" + (self.len - p) * "-"
     def update(self, value):
         self.val = value
@@ -71,14 +71,19 @@ def getstuff(cmd):
 d1 = display('/dev/ttyUSB0', 2400)
 d1.cursor(0)
 
-mpc_cmd = "mpc -h 192.168.0.2 -P password current"
+mpc_cmd = "mpc -h 192.168.0.2 -P password"
 #song = scrolltext("ganz langer text der devinitiv laenger als 40 zeichen ist", 39)
-song = scrolltext(40, 39, "")
+song = scrolltext(0, 39, "")
+prog = pbar(40, 39, 0)
+
+#p = int(re.search("\d+", re.search("\(\d*\%\)", os.popen(mpc_cmd).readlines()[1]).group()).group())
 
 while 1:
-    date = rpad(getstuff("date"), 40)
+    #date = rpad(getstuff("date"), 40)
+    prog.update(int(re.search("\d+", re.search("\(\d*\%\)", os.popen(mpc_cmd).readlines()[1]).group()).group()))
     song.update(getstuff(mpc_cmd))
-    d1.printd(pos(0) + date)
+    #d1.printd(pos(0) + date)
+    d1.printd(prog.getstring())
     d1.printd(song.getstring())
     song.shift()
     time.sleep(1)
