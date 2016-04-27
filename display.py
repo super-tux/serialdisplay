@@ -4,6 +4,11 @@ import os
 import time
 import re
 
+def rpad(s, l):
+    if(len(s) < l):
+        s += (l - len(s)) * " "
+        return s
+
 class display(object):
     """docstring for display"""
     def __init__(self, port, baud):

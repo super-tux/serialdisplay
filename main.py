@@ -1,10 +1,6 @@
 #!/usr/bin/python3
 import display
 
-def rpad(s, l):
-    if(len(s) < l):
-        s += (l - len(s)) * " "
-        return s
 
 def pos(p):
     return "\x10" + chr(p)
