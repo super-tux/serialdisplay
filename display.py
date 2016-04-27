@@ -1,8 +1,5 @@
 import serial
 import io
-import os
-import time
-import re
 
 def rpad(s, l):
     if(len(s) < l):
