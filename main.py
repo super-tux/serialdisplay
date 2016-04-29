@@ -14,12 +14,16 @@ d1.cursor(0)
 mpc_cmd = "mpc -h 192.168.0.2 -P password"
 
 d1.add("song", d.scrolltext(0, 39, "foo"))
-d1.add("prog", d.pbar(40, 39, 0))
+d1.add("prog", d.pbar(45, 29, 0))
+d1.add("curtime", d.text(40, 5, "", "l"))
+d1.add("tottime", d.text(74, 5, "", "r"))
 
 
 while 1:
     #date = rpad(getstuff("date"), 40)
     status = getstuff(mpc_cmd)
+    d1.fields["curtime"].change(re.search("(\d+:\d+)\/(\d+:\d+)", status[1]).group(1))
+    d1.fields["tottime"].change(re.search("(\d+:\d+)\/(\d+:\d+)", status[1]).group(2))
     d1.fields["prog"].change(int(re.search("\((\d+)\%\)", status[1]).group(1)))
     d1.fields["song"].change(status[0])
     #d1.printd(pos(0) + date)
