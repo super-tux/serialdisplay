@@ -1,4 +1,8 @@
 import serial
+<<<<<<< HEAD
+=======
+import io
+>>>>>>> 99c878bcf937ac54ae43ca8547e4b0c80a6b0bf7
 
 def rpad(s, l):
     if(len(s) < l):
@@ -69,7 +73,30 @@ class text(field):
         return(self.text[0:self.len])
 
 
+<<<<<<< HEAD
 class scrolltext(text):
+=======
+class text(field):
+    """docstring for text"""
+    def __init__(self, position, length, textstr, bound):
+        super(text, self).__init__(position, length)
+        self.bound = bound
+        self.change(textstr)
+    def change(self, text):
+        if((self.bound == "r") | (self.bound == "right")):
+            self.text = lpad(text, self.len)
+        elif((self.bound == "l") | (self.bound == "left")):
+            self.text = rpad(text, self.len)
+        elif((self.bound == "m") | (self.bound == "middle")):
+            self.text = mpad(text, self.len)
+        else:
+            raise Exception("fuck you!")
+    def prepstring(self):
+        return(self.text)
+
+
+class scrolltext(field):
+>>>>>>> 99c878bcf937ac54ae43ca8547e4b0c80a6b0bf7
     """docstring for scrolltext"""
     def __init__(self, position, length, text, bound):
         super(scrolltext, self).__init__(position, length, text, bound)
@@ -81,7 +108,10 @@ class scrolltext(text):
     def prepstring(self):
         return self.text[self.spos:self.spos+self.len]
     def change(self, newtext):
+<<<<<<< HEAD
         super(scrolltext, self).change(newtext)
+=======
+>>>>>>> 99c878bcf937ac54ae43ca8547e4b0c80a6b0bf7
         if(newtext != self.text):
             self.spos = 0
 

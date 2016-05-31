@@ -10,14 +10,13 @@ def getstuff(cmd):
 d1 = d.display('/dev/ttyUSB0', 2400)
 d1.cursor(0)
 
-mpc_cmd = "mpc -h 192.168.0.2 -P password | unidecode -e utf8"
+mpc_cmd = "mpc -h 192.168.0.2 -P password"
 
-d1.add("song", d.scrolltext(0, 39, "foo", "m"))
+d1.add("song", d.scrolltext(0, 39, "foo"))
 d1.add("prog", d.pbar(45, 29, 0))
 d1.add("curtime", d.text(40, 5, "", "l"))
 d1.add("tottime", d.text(74, 5, "", "r"))
-# d1.add("pause", d.text(55, 10, " [paused] "))
-timer = 0
+
 
 while 1:
     #date = rpad(getstuff("date"), 40)
