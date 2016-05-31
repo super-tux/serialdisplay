@@ -10,7 +10,7 @@ def getstuff(cmd):
 d1 = d.display('/dev/ttyUSB0', 2400)
 d1.cursor(0)
 
-mpc_cmd = "mpc -h 192.168.0.2 -P password"
+mpc_cmd = "mpc -h 192.168.0.2 -P password | unidecode -e utf8"
 
 d1.add("song", d.scrolltext(0, 39, "foo", "m"))
 d1.add("prog", d.pbar(45, 29, 0))
